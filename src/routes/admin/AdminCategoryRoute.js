@@ -1,23 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const CategoryController = require('../../controllers/admin/AdminCategoryController');
+const AdminCategoryController = require('../../controllers/admin/AdminCategoryController');
 const uploadImage = require('../../middleware/upload');
 
 const upload = uploadImage('categories');
 
 // Lấy danh sách danh mục
-router.get('/', CategoryController.index);
+router.get('/', AdminCategoryController.index);
 
 // Lấy chi tiết 1 danh mục
-router.get('/:id', CategoryController.show);
+router.get('/:id', AdminCategoryController.show);
 
 // Thêm danh mục mớ
-router.post('/', upload.single('image'), CategoryController.store);
+router.post('/', upload.single('image'), AdminCategoryController.store);
 
 // Cập nhật danh mục
-router.put('/:id', upload.single('image'), CategoryController.update);
+router.put('/:id', upload.single('image'), AdminCategoryController.update);
 
 // Xóa danh mục 
-router.delete('/:id', CategoryController.destroy);
+router.delete('/:id', AdminCategoryController.destroy);
 
 module.exports = router;

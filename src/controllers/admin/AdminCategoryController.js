@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const Category = require("../../models/admin/Category");
 
-const CategoryController = {
+const AdminCategoryController = {
   // 1. Lấy toàn bộ danh mục
   index: async (req, res) => {
     try {
@@ -133,4 +133,4 @@ const CategoryController = {
   },
 };
 
-module.exports = CategoryController;
+module.exports = AdminCategoryController;

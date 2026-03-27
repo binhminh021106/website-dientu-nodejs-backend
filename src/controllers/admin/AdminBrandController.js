@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const Brand = require("../../models/admin/Brand");
 
-const BrandController = {
+const AdminBrandController = {
   // Lấy toàn bộ thương hiệu
   index: async (req, res) => {
     try {
@@ -135,4 +135,4 @@ const BrandController = {
   },
 };
 
-module.exports = BrandController;
+module.exports = AdminBrandController;
