@@ -23,5 +23,5 @@ app.use((req, res) => {
 
 // --- KHỞI CHẠY SERVER ---
 app.listen(port, () => {
-    console.log(`🚀 Server đang "bay" tại: http://localhost:${port}`);
+    console.log(`Server đang chạy tại: http://localhost:${port}`);
 });
