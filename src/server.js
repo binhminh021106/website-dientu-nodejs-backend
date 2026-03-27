@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const database = require('./config/database.js');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,10 +11,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Import Routes
-const category = require('./routes/CategoryRoute.js');
+const category = require("./routes/CategoryRoute");
+const brand = require("./routes/BrandRoute")
 
 // Khai báo đường dẫn Api gốc
 app.use('/api/category', category);
+app.use('/api/brand', brand);
 
 app.use((req, res) => {
     res.status(404).json({ message: "Đường dẫn không tồn tại!" });

@@ -35,17 +35,16 @@ const Category = {
 
   // 4. Cập nhật danh mục
   update: async (id, data) => {
-
     // Lấy danh sách các cột cần sửa
     const keys = Object.keys(data); // Ví dụ: ['name', 'status']
-    if (keys.length === 0) return true; 
+    if (keys.length === 0) return true;
 
     // Tạo chuỗi SQL động: "name = ?, status = ?"
     const queryParts = keys.map((key) => `${key} = ?`).join(", ");
 
     // Chuẩn bị mảng giá trị tương ứng
     const values = Object.values(data); // Ví dụ: ['Tên mới', 1]
-    values.push(id); 
+    values.push(id);
 
     const sql = `UPDATE categories SET ${queryParts} WHERE id = ?`;
 
@@ -61,6 +60,20 @@ const Category = {
       [now, id],
     );
     return result.affectedRows > 0;
+  },
+
+  // Check trùng tên
+  checkName: async (name, excludeId = null) => {
+    let sql = "SELECT * FROM categories WHERE name = ? AND deleted_at IS NULL";
+    const params = [name];
+
+    if (excludeId) {
+      sql += " AND id != ?";
+      params.push(excludeId);
+    }
+
+    const [rows] = await db.query(sql, params);
+    return rows.length > 0;
   },
 };
 

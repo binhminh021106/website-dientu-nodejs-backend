@@ -1,58 +1,58 @@
 const path = require("path");
 const fs = require("fs");
-const Category = require("../models/Category");
+const Brand = require("../models/Brand");
 
-const CategoryController = {
-  // 1. Lấy toàn bộ danh mục
+const BrandController = {
+  // Lấy toàn bộ thương hiệu
   index: async (req, res) => {
     try {
-      const categories = await Category.getAll();
+      const brands = await Brand.getAll();
       res.status(200).json({
         success: true,
-        data: categories,
+        data: brands,
       });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
   },
 
-  // 2. Lấy chi tiết 1 danh mục
+  // Lấy chi tiết thương hiệu
   show: async (req, res) => {
     try {
-      const category = await Category.getById(req.params.id);
-      if (!category) {
+      const brand = await Brand.getById(req.params.id);
+      if (!brand) {
         return res
           .status(404)
-          .json({ success: false, message: "Không tìm thấy danh mục" });
+          .json({ success: false, message: "Không tìm thấy thương hiệu" });
       }
-      res.status(200).json({ success: true, data: category });
+      res.status(200).json({ success: true, data: brand });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
   },
 
-  // 3. Tạo mới danh mục
+  // Thêm thương hiệu
   store: async (req, res) => {
     try {
-      const categoryData = req.body;
       const { name } = req.body;
+      const BrandData = req.body;
 
-      const isExisted = await Category.checkName(name);
+      const isExisted = await Brand.checkName(name);
       if (isExisted) {
         return res.status(400).json({
           success: false,
-          message: `Danh mục "${name}" đã tồn tại!`,
+          message: `Thương hiệu "${name}" đã tồn tại!`,
         });
       }
 
       if (req.file) {
-        categoryData.image = req.file.filename;
+        BrandData.image = req.file.filename;
       }
 
-      const newId = await Category.create(categoryData);
+      const newId = await Brand.create(BrandData);
       res.status(201).json({
         success: true,
-        message: "Tạo danh mục thành công",
+        message: "Tạo thương hiệu thành công",
         id: newId,
       });
     } catch (error) {
@@ -60,19 +60,21 @@ const CategoryController = {
     }
   },
 
-  // 4. Cập nhật danh mục
+  // Sửa thương hiệu
   update: async (req, res) => {
     try {
       const { id } = req.params;
       const { name } = req.body;
       let updateData = { ...req.body };
 
-      const isExisted = await Category.checkName(name, id);
-      if (isExisted) {
-        return res.status(400).json({
-          success: false,
-          message: `Tên danh mục "${name}" đã trùng với danh mục khác!`,
-        });
+      if (name) {
+        const isExisted = await Brand.checkName(name, id);
+        if (isExisted) {
+          return res.status(400).json({
+            success: false,
+            message: `Tên thương hiệu "${name}" đã bị trùng với thương hiệu khác!`,
+          });
+        }
       }
 
       // Xử lý riêng cho ảnh
@@ -80,12 +82,12 @@ const CategoryController = {
         updateData.image = req.file.filename;
 
         // Logic xóa ảnh cũ
-        const oldCategory = await Category.getById(id);
-        if (oldCategory && oldCategory.image) {
+        const oldBrand = await Brand.getById(id);
+        if (oldBrand && oldBrand.image) {
           const oldPath = path.join(
             __dirname,
-            "../uploads/categories/",
-            oldCategory.image,
+            "../uploads/brands/",
+            oldBrand.image,
           );
           if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
         }
@@ -98,27 +100,27 @@ const CategoryController = {
         }
       });
 
-      const isUpdated = await Category.update(id, updateData);
+      const isUpdated = await Brand.update(id, updateData);
       if (!isUpdated) {
         return res.status(404).json({
           success: false,
-          message: "Không tìm thấy danh mục để cập nhật",
+          message: "Không tìm thấy thương hiệu để cập nhật",
         });
       }
 
       res.status(200).json({
         success: true,
-        message: "Cập nhật danh mục thành công",
+        message: "Cập nhật thương hiệu thành công",
       });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
   },
 
-  // 5. Xóa danh mục (Soft Delete)
+  // Xoá thương hiệu
   destroy: async (req, res) => {
     try {
-      const isDeleted = await Category.delete(req.params.id);
+      const isDeleted = await Brand.delete(req.params.id);
       if (!isDeleted) {
         return res
           .status(404)
@@ -126,11 +128,11 @@ const CategoryController = {
       }
       res
         .status(200)
-        .json({ success: true, message: "Đã xóa danh mục vào thùng rác" });
+        .json({ success: true, message: "Đã xóa thương hiệu vào thùng rác" });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
   },
 };
 
-module.exports = CategoryController;
+module.exports = BrandController;
