@@ -10,13 +10,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Import Routes
-const category = require("./routes/CategoryRoute");
-const brand = require("./routes/BrandRoute")
+// Import Routes Admin
+const category = require("./routes/admin/AdminCategoryRoute");
+const brand = require("./routes/admin/AdminBrandRoute");
 
 // Khai báo đường dẫn Api gốc
-app.use('/api/category', category);
-app.use('/api/brand', brand);
+app.use('/api/admin/category', category);
+app.use('/api/admin/brand', brand);
 
 app.use((req, res) => {
     res.status(404).json({ message: "Đường dẫn không tồn tại!" });

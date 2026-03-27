@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const CategoryController = require('../controllers/CategoryController');
-const uploadImage = require('../middleware/upload');
+const CategoryController = require('../../controllers/admin/AdminCategoryController');
+const uploadImage = require('../../middleware/upload');
 
 const upload = uploadImage('categories');
 

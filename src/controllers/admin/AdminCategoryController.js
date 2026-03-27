@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const Category = require("../models/Category");
+const Category = require("../../models/admin/Category");
 
 const CategoryController = {
   // 1. Lấy toàn bộ danh mục
@@ -84,7 +84,7 @@ const CategoryController = {
         if (oldCategory && oldCategory.image) {
           const oldPath = path.join(
             __dirname,
-            "../uploads/categories/",
+            "../../uploads/categories",
             oldCategory.image,
           );
           if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);

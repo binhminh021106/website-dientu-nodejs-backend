@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const Brand = require("../models/Brand");
+const Brand = require("../../models/admin/Brand");
 
 const BrandController = {
   // Lấy toàn bộ thương hiệu
@@ -86,7 +86,7 @@ const BrandController = {
         if (oldBrand && oldBrand.image) {
           const oldPath = path.join(
             __dirname,
-            "../uploads/brands/",
+            "../../uploads/brands",
             oldBrand.image,
           );
           if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);

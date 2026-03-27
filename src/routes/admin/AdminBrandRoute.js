@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const BrandController = require("../controllers/BrandController");
-const uploadImage = require("../middleware/upload");
+const BrandController = require("../../controllers/admin/AdminBrandController");
+const uploadImage = require("../../middleware/upload");
 
 const upload = uploadImage("brands");
 
