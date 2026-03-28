@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const Category = require("../../models/admin/Category");
+const Category = require("../../models/Category");
 
 const AdminCategoryController = {
   // 1. Lấy toàn bộ danh mục

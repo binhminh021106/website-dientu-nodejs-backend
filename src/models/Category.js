@@ -1,4 +1,4 @@
-const db = require("../../config/database");
+const db = require("../config/database");
 
 const Category = {
   // 1. Lấy tất cả danh mục

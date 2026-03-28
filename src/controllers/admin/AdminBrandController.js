@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const Brand = require("../../models/admin/Brand");
+const Brand = require("../../models/Brand");
 
 const AdminBrandController = {
   // Lấy toàn bộ thương hiệu
