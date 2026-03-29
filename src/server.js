@@ -15,10 +15,13 @@ const category = require("./routes/admin/AdminCategoryRoute");
 const brand = require("./routes/admin/AdminBrandRoute");
 const product = require("./routes/admin/AdminProductRoute");
 
+const auth = require("./routes/auth/AuthRoute");
+
 // Khai báo đường dẫn Api gốc
 app.use('/api/admin/category', category);
 app.use('/api/admin/brand', brand);
 app.use('/api/admin/product', product);
+app.use('/api', auth);
 
 app.use((req, res) => {
     res.status(404).json({ message: "Đường dẫn không tồn tại!" });
