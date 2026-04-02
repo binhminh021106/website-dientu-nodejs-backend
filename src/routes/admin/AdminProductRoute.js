@@ -8,6 +8,7 @@ const upload = createUpload("products");
 
 // Route thêm sản phẩm
 router.post("/", verifyToken, isAdmin, upload.single("thumbnail_image"), ProductController.store);
+//hihi
 
 // Route lấy danh sách
 router.get("/", verifyToken, isAdmin, ProductController.index);
