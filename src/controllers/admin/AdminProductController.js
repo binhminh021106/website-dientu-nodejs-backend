@@ -7,7 +7,9 @@ const ProductController = {
   // Lấy toàn bộ sản phẩm
   index: async (req, res) => {
     try {
-      const products = await Product.getAll();
+      const includeDeleted = req.query.include_deleted === "true" || true;
+
+      const products = await Product.getAll(includeDeleted);
       res.status(200).json({ success: true, data: products });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
@@ -17,7 +19,9 @@ const ProductController = {
   // Lấy chi tiết 1 sản phẩm kèm biến thể
   show: async (req, res) => {
     try {
-      const product = await Product.getById(req.params.id);
+      const includeDeleted = req.query.include_deleted === "true" || true;
+
+      const product = await Product.getById(req.params.id, includeDeleted);
       if (!product) {
         return res
           .status(404)

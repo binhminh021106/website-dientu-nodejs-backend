@@ -2,19 +2,27 @@ const db = require("../config/database");
 
 const Brand = {
   // Lấy tất cả thương hiệu
-  getAll: async () => {
-    const [rows] = await db.query(
-      "SELECT * FROM brands WHERE deleted_at is NULL ORDER BY id DESC",
-    );
+  getAll: async (includeDeleted = false) => {
+    let sql = `SELECT * FROM brands`;
+
+    if (!includeDeleted) {
+      sql += " WHERE deleted_at IS NULL";
+    }
+    sql += " ORDER BY id DESC";
+
+    const [rows] = await db.query(sql);
     return rows;
   },
 
   // Lấy thương hiệu theo id
-  getById: async (id) => {
-    const [rows] = await db.query(
-      "SELECT * FROM brands WHERE deleted_at is NUll AND id = ?",
-      [id],
-    );
+  getById: async (id, includeDeleted = false) => {
+    let sql = `SELECT * FROM brands WHERE id = ?`;
+
+    if (!includeDeleted) {
+      sql += " AND deleted_at IS NULL";
+    }
+
+    const [rows] = await db.query(sql, [id]);
     return rows[0];
   },
 
@@ -58,17 +66,17 @@ const Brand = {
 
   // Check trùng tên
   checkName: async (name, excludeId = null) => {
-        let sql = "SELECT * FROM brands WHERE name = ? AND deleted_at IS NULL";
-        const params = [name];
+    let sql = "SELECT * FROM brands WHERE name = ? AND deleted_at IS NULL";
+    const params = [name];
 
-        if (excludeId) {
-            sql += " AND id != ?";
-            params.push(excludeId);
-        }
-
-        const [rows] = await db.query(sql, params);
-        return rows.length > 0; 
+    if (excludeId) {
+      sql += " AND id != ?";
+      params.push(excludeId);
     }
+
+    const [rows] = await db.query(sql, params);
+    return rows.length > 0;
+  },
 };
 
 module.exports = Brand;

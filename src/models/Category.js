@@ -2,19 +2,28 @@ const db = require("../config/database");
 
 const Category = {
   // 1. Lấy tất cả danh mục
-  getAll: async () => {
-    const [rows] = await db.query(
-      "SELECT * FROM categories WHERE deleted_at is NULL ORDER BY id DESC",
-    );
+  getAll: async (includeDeleted = false) => {
+    let sql = `SELECT * FROM categories`;
+
+    if (!includeDeleted) {
+      sql += " WHERE deleted_at IS NULL";
+    }
+    sql += " ORDER BY id DESC";
+
+    const [rows] = await db.query(sql);
+    return rows;
     return rows;
   },
 
   // 2. Tìm một danh mục theo ID
-  getById: async (id) => {
-    const [rows] = await db.query(
-      "SELECT * FROM categories WHERE id = ? AND deleted_at is NULL",
-      [id],
-    );
+  getById: async (id, includeDeleted = false) => {
+    let sql = `SELECT * FROM categories WHERE id = ?`;
+
+    if (!includeDeleted) {
+      sql += " AND deleted_at IS NULL";
+    }
+
+    const [rows] = await db.query(sql, [id]);
     return rows[0];
   },
 

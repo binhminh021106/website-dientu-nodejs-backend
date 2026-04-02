@@ -6,7 +6,9 @@ const AdminBrandController = {
   // Lấy toàn bộ thương hiệu
   index: async (req, res) => {
     try {
-      const brands = await Brand.getAll();
+      const includeDeleted = req.query.include_deleted === "true" || true;
+
+      const brands = await Brand.getAll(includeDeleted);
       res.status(200).json({
         success: true,
         data: brands,
@@ -19,7 +21,9 @@ const AdminBrandController = {
   // Lấy chi tiết thương hiệu
   show: async (req, res) => {
     try {
-      const brand = await Brand.getById(req.params.id);
+      const includeDeleted = req.query.include_deleted === "true" || true;
+
+      const brand = await Brand.getById(req.params.id, includeDeleted);
       if (!brand) {
         return res
           .status(404)

@@ -2,26 +2,35 @@ const db = require("../config/database");
 
 const User = {
   // Lấy tất cả người dùng
-  getAll: async () => {
-    const sql = `
+  getAll: async (includeDeleted = false) => {
+    let sql = `
       SELECT u.*, r.name as role_name 
       FROM users u 
       LEFT JOIN roles r ON u.role_id = r.id
-      WHERE u.deleted_at IS NULL
-      ORDER BY u.id DESC
     `;
+
+    if (!includeDeleted) {
+      sql += " WHERE u.deleted_at IS NULL";
+    }
+    sql += " ORDER BY u.id DESC";
+
     const [rows] = await db.query(sql);
     return rows;
   },
 
   // Lấy chi tiết người dùng
-  findById: async (id) => {
-    const sql = `
+  findById: async (id, includeDeleted = false) => {
+    let sql = `
       SELECT u.id, u.name, u.email, u.phone, u.status, u.created_at, r.name as role_name 
       FROM users u 
       LEFT JOIN roles r ON u.role_id = r.id 
-      WHERE u.id = ? AND u.deleted_at IS NULL
+      WHERE u.id = ? 
     `;
+
+    if (!includeDeleted) {
+      sql += " AND u.deleted_at IS NULL";
+    }
+
     const [rows] = await db.query(sql, [id]);
     return rows[0];
   },
@@ -52,14 +61,24 @@ const User = {
 
   // Tạo người dùng mới
   create: async (userData) => {
-    const { name, email, phone, image, gender, date_of_birth, password, role_id = 2, status = 1 } = userData;
+    const {
+      name,
+      email,
+      phone,
+      image,
+      gender,
+      date_of_birth,
+      password,
+      role_id = 2,
+      status = 1,
+    } = userData;
     const sql =
       "INSERT INTO users (name, email, phone, image, gender, date_of_birth, password, role_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     const [result] = await db.query(sql, [
       name,
       email,
       phone,
-      image, 
+      image,
       gender,
       date_of_birth,
       password,
@@ -95,8 +114,8 @@ const User = {
 
   // Check trùng email
   checkEmail: async () => {
-    let sql = `SELECT * FROM users WHERE email = ? AND deleted_at is NULL`
-  }
+    let sql = `SELECT * FROM users WHERE email = ? AND deleted_at is NULL`;
+  },
 };
 
 module.exports = User;

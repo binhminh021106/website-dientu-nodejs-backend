@@ -2,22 +2,30 @@ const db = require("../config/database");
 
 const Product = {
   // Lấy tất cả sản phẩm
-  getAll: async () => {
-    const sql = `
+  getAll: async (includeDeleted = false) => {
+    let sql = `
       SELECT p.*, c.name as category_name, b.name as brand_name 
       FROM products p 
       LEFT JOIN categories c ON p.category_id = c.id 
-      LEFT JOIN brands b ON p.brand_id = b.id 
-      WHERE p.deleted_at IS NULL
-      ORDER BY p.id DESC
-    `;
+      LEFT JOIN brands b ON p.brand_id = b.id`;
+
+    if (!includeDeleted) {
+      sql += " WHERE p.deleted_at IS NULL";
+    }
+    sql += " ORDER BY p.id DESC";
+
     const [rows] = await db.query(sql);
     return rows;
   },
 
   // Lấy chi tiết 1 sản phẩm kèm mảng biến thể
-  getById: async (id) => {
-    const sqlProduct = `SELECT * FROM products WHERE id = ? AND deleted_at IS NULL`;
+  getById: async (id, includeDeleted = false) => {
+    let sqlProduct = `SELECT * FROM products WHERE id = ?`;
+
+    if (!includeDeleted) {
+      sqlProduct += ` AND deleted_at IS NULL`;
+    }
+
     const [products] = await db.query(sqlProduct, [id]);
     if (products.length === 0) return null;
 

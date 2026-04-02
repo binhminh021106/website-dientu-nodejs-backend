@@ -6,7 +6,9 @@ const AdminCategoryController = {
   // 1. Lấy toàn bộ danh mục
   index: async (req, res) => {
     try {
-      const categories = await Category.getAll();
+      const includeDeleted = req.query.include_deleted === "true" || true;
+
+      const categories = await Category.getAll(includeDeleted);
       res.status(200).json({
         success: true,
         data: categories,
@@ -19,7 +21,9 @@ const AdminCategoryController = {
   // 2. Lấy chi tiết 1 danh mục
   show: async (req, res) => {
     try {
-      const category = await Category.getById(req.params.id);
+      const includeDeleted = req.query.include_deleted === "true" || true;
+
+      const category = await Category.getById(req.params.id, includeDeleted);
       if (!category) {
         return res
           .status(404)
