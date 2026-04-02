@@ -14,7 +14,6 @@ router.get("/", verifyToken, isAdmin, ProductController.index);
 
 // Route lấy chi tiết 1 sản phẩm
 router.get("/:id", verifyToken, isAdmin, ProductController.show);
-router.get("/:id", verifyToken, isAdmin, ProductController.show);
 
 // Route sửa sản phẩm
 router.put("/:id", verifyToken, isAdmin, upload.single("thumbnail_image"), ProductController.update);
