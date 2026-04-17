@@ -13,18 +13,32 @@ app.use(express.urlencoded({ extended: true }));
 // Import Routes Admin
 const category = require("./routes/admin/AdminCategoryRoute");
 const brand = require("./routes/admin/AdminBrandRoute");
-const product = require("./routes/admin/AdminProductRoute");
+const slide = require("./routes/admin/AdminSlideRoute");
+// const product = require("./routes/admin/AdminProductRoute");
 
-const auth = require("./routes/auth/AuthRoute");
+// const auth = require("./routes/auth/AuthRoute");
 
 // Khai báo đường dẫn Api gốc
 app.use('/api/admin/category', category);
 app.use('/api/admin/brand', brand);
-app.use('/api/admin/product', product);
-app.use('/api', auth);
+app.use('/api/admin/slide', slide);
+// app.use('/api/admin/product', product);
+// app.use('/api', auth);
 
 app.use((req, res) => {
     res.status(404).json({ message: "Đường dẫn không tồn tại!" });
+});
+
+app.use((err, req, res, next) => {
+    // Log lỗi ra console để debug 
+    // console.error(err.stack);
+    
+    const statusCode = err.status || 400; 
+    
+    res.status(statusCode).json({
+        success: false,
+        message: err.message || "Đã có lỗi xảy ra từ hệ thống!"
+    });
 });
 
 // --- KHỞI CHẠY SERVER ---

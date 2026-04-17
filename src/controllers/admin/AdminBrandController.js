@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const Brand = require("../../models/Brand");
+const BrandService = require("../../services/BrandServices");
 
 const AdminBrandController = {
   // Lấy toàn bộ thương hiệu
@@ -8,7 +8,7 @@ const AdminBrandController = {
     try {
       const includeDeleted = req.query.include_deleted === "true" || true;
 
-      const brands = await Brand.getAll(includeDeleted);
+      const brands = await BrandService.getAll(includeDeleted);
       res.status(200).json({
         success: true,
         data: brands,
@@ -23,7 +23,7 @@ const AdminBrandController = {
     try {
       const includeDeleted = req.query.include_deleted === "true" || true;
 
-      const brand = await Brand.getById(req.params.id, includeDeleted);
+      const brand = await BrandService.getById(req.params.id, includeDeleted);
       if (!brand) {
         return res
           .status(404)
@@ -41,7 +41,7 @@ const AdminBrandController = {
       const { name } = req.body;
       const BrandData = req.body;
 
-      const isExisted = await Brand.checkName(name);
+      const isExisted = await BrandService.checkName(name);
       if (isExisted) {
         return res.status(400).json({
           success: false,
@@ -53,7 +53,7 @@ const AdminBrandController = {
         BrandData.image = req.file.filename;
       }
 
-      const newId = await Brand.create(BrandData);
+      const newId = await BrandService.create(BrandData);
       res.status(201).json({
         success: true,
         message: "Tạo thương hiệu thành công",
@@ -72,7 +72,7 @@ const AdminBrandController = {
       let updateData = { ...req.body };
 
       if (name) {
-        const isExisted = await Brand.checkName(name, id);
+        const isExisted = await BrandService.checkName(name, id);
         if (isExisted) {
           return res.status(400).json({
             success: false,
@@ -86,7 +86,7 @@ const AdminBrandController = {
         updateData.image = req.file.filename;
 
         // Logic xóa ảnh cũ
-        const oldBrand = await Brand.getById(id);
+        const oldBrand = await BrandService.getById(id);
         if (oldBrand && oldBrand.image) {
           const oldPath = path.join(
             __dirname,
@@ -104,7 +104,7 @@ const AdminBrandController = {
         }
       });
 
-      const isUpdated = await Brand.update(id, updateData);
+      const isUpdated = await BrandService.update(id, updateData);
       if (!isUpdated) {
         return res.status(404).json({
           success: false,
@@ -124,7 +124,7 @@ const AdminBrandController = {
   // Xoá thương hiệu
   destroy: async (req, res) => {
     try {
-      const isDeleted = await Brand.delete(req.params.id);
+      const isDeleted = await BrandService.delete(req.params.id);
       if (!isDeleted) {
         return res
           .status(404)
