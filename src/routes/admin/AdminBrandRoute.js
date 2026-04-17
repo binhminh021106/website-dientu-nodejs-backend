@@ -2,23 +2,23 @@ const express = require("express");
 const router = express.Router();
 const AdminBrandController = require("../../controllers/admin/AdminBrandController");
 const uploadImage = require("../../middleware/upload");
-const { verifyToken, isAdmin } = require("../../middleware/AuthMiddleware");
+// const { verifyToken, isAdmin } = require("../../middleware/AuthMiddleware");
 
 const upload = uploadImage("brands");
 
-// Lấy danh sách danh mục
-router.get("/", verifyToken, isAdmin, AdminBrandController.index);
+// Lấy danh sách thương hiệu
+router.get("/", AdminBrandController.index);
 
-// Lấy chi tiết 1 danh mục
-router.get("/:id", verifyToken, isAdmin, AdminBrandController.show);
+// Lấy chi tiết 1 thương hiệu
+router.get("/:id", AdminBrandController.show);
 
-// Thêm danh mục mớ
-router.post("/", verifyToken, isAdmin, upload.single("image"), AdminBrandController.store);
+// Thêm thương hiệu mới
+router.post("/", upload.single("image"), AdminBrandController.store);
 
-// Cập nhật danh mục
-router.put("/:id", verifyToken, isAdmin, upload.single("image"), AdminBrandController.update);
+// Cập nhật thương hiệu
+router.put("/:id", upload.single("image"), AdminBrandController.update);
 
-// Xóa danh mục
-router.delete("/:id", verifyToken, isAdmin, AdminBrandController.destroy);
+// Xóa thương hiệu
+router.delete("/:id", AdminBrandController.destroy);
 
 module.exports = router;
